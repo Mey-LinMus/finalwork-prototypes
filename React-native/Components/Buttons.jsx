@@ -1,16 +1,26 @@
-import React from 'react';
-import { View, Button, Alert } from 'react-native';
+import React from "react";
+import { View, Button, StyleSheet, Alert } from "react-native";
 
-const MyComponent = () => {
+export default function Btn() {
   const handlePress = () => {
-    Alert.alert('Button Pressed!');
+    Alert.alert("Button Pressed!");
   };
 
   return (
-    <View>
-      <Button title="Press Me" onPress={handlePress} />
+    <View style={styles.containerBtn}>
+      <Button title="Press Me" onPress={handlePress} style={styles.button} />
     </View>
   );
-};
+}
 
-export default MyComponent;
+const styles = StyleSheet.create({
+  containerBtn: {
+    zIndex: 10,
+    position: "absolute",
+    top: 500,
+    left: 150,
+    backgroundColor: "white",
+    borderRadius: 30,
+    padding: 10,
+  },
+});
