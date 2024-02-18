@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import GUI from "lil-gui";
+import gsap from "gsap";
 
 /**
  * Base
@@ -21,7 +22,7 @@ const parameters = {};
 parameters.count = 151900;
 parameters.size = 0.01;
 parameters.radius = 6.24;
-parameters.branches = 12
+parameters.branches = 12;
 parameters.spin = 0.206;
 parameters.randomness = 0.2;
 parameters.randomnessPower = 1;
@@ -190,9 +191,10 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.x = 3;
-camera.position.y = 3;
-camera.position.z = 3;
+camera.position.x = 1;
+camera.position.y = 10;
+camera.position.z = 0;
+
 scene.add(camera);
 
 // Controls
@@ -211,14 +213,21 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 /**
  * Animate
  */
-const clock = new THREE.Clock();
+const rotateCamera = () => {
+  gsap.to(camera.rotation, {
+    z: Math.PI * 2, // Rotate 360 degrees around the y-axis
+    duration: 15, // Duration of the rotation animation in seconds
+    ease: "linear", // Linear easing for a constant rotation speed
+  });
+};
+
+const startRotation = () => {
+  rotateCamera();
+};
+
+startRotation();
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
-
-  // Update controls
-  controls.update();
-
   // Render
   renderer.render(scene, camera);
 
