@@ -218,6 +218,7 @@ const rotateCamera = () => {
     z: Math.PI * 2, // Rotate 360 degrees around the y-axis
     duration: 15, // Duration of the rotation animation in seconds
     ease: "linear", // Linear easing for a constant rotation speed
+    repeat: -1,
   });
 };
 
