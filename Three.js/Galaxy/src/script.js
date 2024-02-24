@@ -19,12 +19,12 @@ const scene = new THREE.Scene();
  * Galaxy
  */
 const parameters = {};
-parameters.count = 151900;
+parameters.count = 200000;
 parameters.size = 0.01;
-parameters.radius = 6.24;
-parameters.branches = 12;
+parameters.radius = 13;
+parameters.branches = 19;
 parameters.spin = 0.206;
-parameters.randomness = 0.2;
+parameters.randomness = 0.16;
 parameters.randomnessPower = 1;
 parameters.insideColor = "#5153e1";
 parameters.outsideColor = "#5e20cf";
@@ -60,26 +60,26 @@ const generateGalaxy = () => {
 
     const spinAngle = radius * parameters.spin;
     const branchAngle =
-      ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+      ((i % parameters.branches) / parameters.branches) * Math.PI * 4;
 
     const randomX =
       Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1) *
+      (Math.random() < 0.5 ? 1 : 2) *
       parameters.randomness *
       radius;
     const randomY =
       Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1) *
+      (Math.random() < 0.5 ? 1 : 10) *
       parameters.randomness *
       radius;
     const randomZ =
       Math.pow(Math.random(), parameters.randomnessPower) *
-      (Math.random() < 0.5 ? 1 : -1) *
+      (Math.random() < 0.5 ? 1 : 10) *
       parameters.randomness *
       radius;
 
     positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
-    positions[i3 + 1] = randomY;
+    positions[i3 + 2] = randomY;
     positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
 
     // Color
@@ -112,48 +112,48 @@ const generateGalaxy = () => {
   scene.add(points);
 };
 
-gui
-  .add(parameters, "count")
-  .min(100)
-  .max(1000000)
-  .step(100)
-  .onFinishChange(generateGalaxy);
-gui
-  .add(parameters, "size")
-  .min(0.001)
-  .max(0.1)
-  .step(0.001)
-  .onFinishChange(generateGalaxy);
-gui
-  .add(parameters, "radius")
-  .min(0.01)
-  .max(20)
-  .step(0.01)
-  .onFinishChange(generateGalaxy);
-gui
-  .add(parameters, "branches")
-  .min(2)
-  .max(20)
-  .step(1)
-  .onFinishChange(generateGalaxy);
-gui
-  .add(parameters, "spin")
-  .min(-5)
-  .max(5)
-  .step(0.001)
-  .onFinishChange(generateGalaxy);
-gui
-  .add(parameters, "randomness")
-  .min(0)
-  .max(2)
-  .step(0.001)
-  .onFinishChange(generateGalaxy);
-gui
-  .add(parameters, "randomnessPower")
-  .min(1)
-  .max(10)
-  .step(0.001)
-  .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "count")
+//   .min(800)
+//   .max(1000000)
+//   .step(100)
+//   .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "size")
+//   .min(0.001)
+//   .max(0.1)
+//   .step(0.001)
+//   .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "radius")
+//   .min(0.01)
+//   .max(20)
+//   .step(0.01)
+//   .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "branches")
+//   .min(2)
+//   .max(20)
+//   .step(1)
+//   .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "spin")
+//   .min(-5)
+//   .max(5)
+//   .step(0.001)
+//   .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "randomness")
+//   .min(0)
+//   .max(2)
+//   .step(0.001)
+//   .onFinishChange(generateGalaxy);
+// gui
+//   .add(parameters, "randomnessPower")
+//   .min(1)
+//   .max(10)
+//   .step(0.001)
+//   .onFinishChange(generateGalaxy);
 gui.addColor(parameters, "insideColor").onFinishChange(generateGalaxy);
 gui.addColor(parameters, "outsideColor").onFinishChange(generateGalaxy);
 
@@ -216,9 +216,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 const rotateCamera = () => {
   gsap.to(camera.rotation, {
     z: Math.PI * 2, // Rotate 360 degrees around the y-axis
-    duration: 15, // Duration of the rotation animation in seconds
+    duration: 50, // Duration of the rotation animation in seconds
     ease: "linear", // Linear easing for a constant rotation speed
-    repeat: -1,
   });
 };
 
