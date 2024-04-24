@@ -1,5 +1,5 @@
-import React from 'react';
-import VRScene from './VRScene';
+import React from "react";
+import VRScene from "./VRscene";
 
 function App() {
   return (
