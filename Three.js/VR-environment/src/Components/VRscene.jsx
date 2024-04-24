@@ -1,73 +1,82 @@
-import React, { useRef, useEffect } from "react";
-import * as THREE from "three";
-import { VRButton } from "three/examples/jsm/webxr/VRButton";
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { StereoEffect } from 'three/examples/jsm/effects/StereoEffect';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 const VRScene = () => {
-  const sceneRef = useRef();
-  const vrButtonContainerRef = useRef();
+  const containerRef = useRef(null);
+  const rendererRef = useRef(null);
+  const cameraRef = useRef(null);
 
   useEffect(() => {
+    // Initialize Three.js scene
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.xr.enabled = true;
+    rendererRef.current = renderer;
+    containerRef.current.appendChild(renderer.domElement);
+    cameraRef.current = camera;
 
+    // Create a cube
     const geometry = new THREE.BoxGeometry();
     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
     const cube = new THREE.Mesh(geometry, material);
     scene.add(cube);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+    // Set up stereo effect
+    const stereoEffect = new StereoEffect(renderer);
+    stereoEffect.setSize(window.innerWidth, window.innerHeight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 1, 0);
-    scene.add(directionalLight);
+    // Add VR controls
+    const controls = new OrbitControls(camera, renderer.domElement);
 
+    // Set camera position
     camera.position.z = 5;
 
+    // Render function
     const animate = () => {
-      renderer.setAnimationLoop(() => {
-        cube.rotation.x += 0.01;
-        cube.rotation.y += 0.01;
-        renderer.render(scene, camera);
-      });
-    };
+      requestAnimationFrame(animate);
 
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
+      // Update VR controls
+      controls.update();
+
+      // Update camera aspect ratio
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
       camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      // Resize renderer
+      renderer.setSize(width, height);
+
+      // Render stereo effect
+      stereoEffect.render(scene, camera);
     };
 
-    window.addEventListener("resize", handleResize);
-
-    vrButtonContainerRef.current.appendChild(VRButton.createButton(renderer));
-
-    sceneRef.current.appendChild(renderer.domElement);
-
+    // Start animation loop
     animate();
 
+    // Handle window resize
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up
     return () => {
-      window.removeEventListener("resize", handleResize);
-      renderer.setAnimationLoop(null);
+      window.removeEventListener('resize', handleResize);
       renderer.dispose();
+      controls.dispose();
     };
   }, []);
 
-  return (
-    <>
-      <div ref={sceneRef} />
-      <div ref={vrButtonContainerRef} />
-    </>
-  );
+  return <div ref={containerRef} />;
 };
 
 export default VRScene;
