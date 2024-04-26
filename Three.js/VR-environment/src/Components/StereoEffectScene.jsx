@@ -31,24 +31,15 @@ const StereoEffectScene = () => {
       // Creating a scene
       scene = new THREE.Scene();
       // Loading a cube texture as background
-      scene.background = new THREE.CubeTextureLoader()
-        .setPath("textures/cube/Park3Med/")
-        .load(["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]);
+      // Setting background color to blue
+      scene.background = new THREE.Color(0x0377fc); // 0x0000ff represents blue color in hexadecimal
 
       // Creating a sphere geometry
-      const geometry = new THREE.SphereGeometry(100, 32, 16);
+      const geometry = new THREE.CapsuleGeometry(Math.random() * 200 - 100);
 
-      // Loading cube texture for environment mapping
-      const textureCube = new THREE.CubeTextureLoader()
-        .setPath("textures/cube/Park3Med/")
-        .load(["px.jpg", "nx.jpg", "py.jpg", "ny.jpg", "pz.jpg", "nz.jpg"]);
-      textureCube.mapping = THREE.CubeRefractionMapping;
-
-      // Creating a basic material with environment mapping
+      // Creating a basic material with red color
       const material = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        envMap: textureCube,
-        refractionRatio: 0.95,
+        color: 0x03bafc, // Red color
       });
 
       // Creating and adding spheres to the scene
@@ -57,7 +48,7 @@ const StereoEffectScene = () => {
         mesh.position.x = Math.random() * 10000 - 5000;
         mesh.position.y = Math.random() * 10000 - 5000;
         mesh.position.z = Math.random() * 10000 - 5000;
-        mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 3 + 1;
+        mesh.scale.x = mesh.scale.y = mesh.scale.z = Math.random() * 2 + 1;
         scene.add(mesh);
         spheres.current.push(mesh);
       }
@@ -97,7 +88,7 @@ const StereoEffectScene = () => {
 
     const render = () => {
       // Rendering function
-      const timer = 0.0001 * Date.now();
+      const timer = 0.00001 * Date.now();
 
       // Updating camera position based on mouse movement
       camera.position.x += (mouseX.current - camera.position.x) * 0.05;
